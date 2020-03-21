@@ -14,10 +14,10 @@ cash=$EVERY_DAY_STAKE
 totalAmount=0
 
 #dictionary
-declare -A betsRecords
+declare -A sumOfBets
 
 #Function for Daily Betting
-function dailyBet() 
+function dailyBet()
 {
 	while [ $cash -gt $LOWER_PERCENT ] && [ $cash -lt $UPPER_PERCENT ]
 	do
@@ -38,18 +38,9 @@ function monthlyGambling()
 	for ((day=1;day<=TOTAL_DAYS;day++))
 	do
 		#storing Each Day amount in Dictionary
-		storeAmount[Day$day]=$(dailyBet)
-		totalAmount=$((totalAmount + ${storeAmount[Day$day]} ))
-		echo "Day $day = ${storeAmount[Day$day]}"
+		sumOfBets[Day$day]=$((${sumOfBets[Day$((day-1))]} + $(dailyBet) ))
+		echo "Amount On Day-$day : ${sumOfBets[Day$day]}"
 	done
-
-	#Checking for Win or loose
-	if [ $totalAmount -gt 0 ]
-	then
-		echo "Total Amount Won in 20 Days $totalAmount"
-	else
-		echo "Total Amount Loose in 20 Days $totalAmount"
-	fi
 }
 
 #!Starting game
