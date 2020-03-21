@@ -39,9 +39,21 @@ function monthlyGambling()
 	do
 		#storing Each Day amount in Dictionary
 		sumOfBets[Day$day]=$((${sumOfBets[Day$((day-1))]} + $(dailyBet) ))
-		echo "Amount On Day-$day : ${sumOfBets[Day$day]}"
 	done
+	
+	#finding luckiest and unluckiest day by calling sortDictionary function
+	echo "Luckiest Day is : $( sortDictionary | head -1 ) "
+	echo "Unluckiest Day is : $( sortDictionary | tail -1 ) "
 }
 
-#!Starting game
+#function to sort all values of dictionary
+function sortDictionary()
+{
+	for day in ${!sumOfBets[@]}
+	do
+		echo "$day : ${sumOfBets[$day]}"
+	done | sort -k3 -rn
+}
+
+#Starting game
 monthlyGambling
