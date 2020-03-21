@@ -40,7 +40,7 @@ function monthlyGambling()
 		#storing Each Day amount in Dictionary
 		sumOfBets[Day$day]=$((${sumOfBets[Day$((day-1))]} + $(dailyBet) ))
 	done
-	
+
 	#finding luckiest and unluckiest day by calling sortDictionary function
 	echo "Luckiest Day is : $( sortDictionary | head -1 ) "
 	echo "Unluckiest Day is : $( sortDictionary | tail -1 ) "
@@ -55,5 +55,24 @@ function sortDictionary()
 	done | sort -k3 -rn
 }
 
+function playNextMonth()
+{
+	monthlyGambling
+	
+	#checking Previous month balance of Gambler and Decides He/She will be playing or not
+	while [ ${sumOfBets[Day20]} -gt 0 ]
+	do
+		#Printing a colored output
+		echo -e "\e[1;34m Last Month Balance = ${sumOfBets[Day20]} \e[0m \n"
+		read -p "You Won. Do you want to play for the next month?. If yes press 'y' Otherwise press any key : " playAgain
+		if [ $playAgain == "y" ]; then
+			monthlyGambling
+		else
+			exit
+		fi
+	done
+		echo -e "\e[1;35m Last Month Balance = ${sumOfBets[Day20]} \e[0m \nNot Playing Next Month"
+}
+
 #Starting game
-monthlyGambling
+playNextMonth
