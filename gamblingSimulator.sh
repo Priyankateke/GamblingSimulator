@@ -5,14 +5,19 @@ echo "Welcome To Gambling Simulation"
 #constants
 readonly EVERY_DAY_STAKE=100
 readonly BET=1
-LOWER_PERCENT=$((EVERY_DAY_STAKE-$((EVERY_DAY_STAKE * 50 /100)) ))
-UPPER_PERCENT=$((EVERY_DAY_STAKE+$((EVERY_DAY_STAKE * 50 /100)) ))
+readonly TOTAL_DAYS=20
+readonly LOWER_PERCENT=$((EVERY_DAY_STAKE-$((EVERY_DAY_STAKE * 50 /100)) ))
+readonly UPPER_PERCENT=$((EVERY_DAY_STAKE+$((EVERY_DAY_STAKE * 50 /100)) ))
 
-#variables
+#Variables
 cash=$EVERY_DAY_STAKE
+totalAmount=0
 
-#Function to check win or loss 
-function dailyBet()
+#dictionary
+declare -A betsRecords
+
+#Function for Daily Betting
+function dailyBet() 
 {
 	while [ $cash -gt $LOWER_PERCENT ] && [ $cash -lt $UPPER_PERCENT ]
 	do
@@ -23,6 +28,29 @@ function dailyBet()
 			cash=$((cash-BET))
 		fi
 	done
+	gainCash=$((cash-EVERY_DAY_STAKE))
+	echo $gainCash
 }
 
-dailyBet
+#function for Monthly Bet
+function monthlyGambling() 
+{
+	for ((day=1;day<=TOTAL_DAYS;day++))
+	do
+		#storing Each Day amount in Dictionary
+		storeAmount[Day$day]=$(dailyBet)
+		totalAmount=$((totalAmount + ${storeAmount[Day$day]} ))
+		echo "Day $day = ${storeAmount[Day$day]}"
+	done
+
+	#Checking for Win or loose
+	if [ $totalAmount -gt 0 ]
+	then
+		echo "Total Amount Won in 20 Days $totalAmount"
+	else
+		echo "Total Amount Loose in 20 Days $totalAmount"
+	fi
+}
+
+#!Starting game
+monthlyGambling
